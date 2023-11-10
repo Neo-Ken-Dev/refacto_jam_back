@@ -24,14 +24,12 @@ class Cart
         $this->parameterBag=$bag;
     }
 
-
     public function update(Product $product, int $quantity){
-         $cart = $this->getCart();
+        $cart = $this->getCart();
         $cart[$product->getId()] = (int)$quantity;
         $this->session->set("cart", $cart);
     }
 
-   
     public function getCart(){
         return $this->session->get("cart",[]);
     }

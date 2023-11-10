@@ -31,10 +31,12 @@ class CartController extends AbstractController
     #[Route('/addCart/{id}', name: 'addCart')]
     public function addCart(Cart $cart, Request $request, SessionInterface $session, Product $product): Response
     {
-        $quantity=$request->get("quantity");
-        $cart->update($product, $quantity);
-        $previousUrl = $request->headers->get("referer");
-        return $this->redirect($previousUrl);
+        var_dump('$request->get("quantity")');
+        var_dump($request->get("quantity"));
+        // $quantity=$request->get("quantity");
+        // $cart->update($product, $quantity);
+        // $previousUrl = $request->headers->get("referer");
+        // return $this->redirect($previousUrl);
     }
 
     #[Route('/cartsize', name: 'cartsize')]

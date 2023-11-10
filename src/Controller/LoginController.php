@@ -10,9 +10,26 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class LoginController extends AbstractController
 {
-    #[Route('/logout', name: 'logout', methods: ['POST'])]
-    public function index(): JsonResponse
+    #[Route('/login', name: 'login', methods: ['POST'])]
+    public function index(AuthenticationUtils $authenticationUtils): Response
     {
-        return $this->json('user disconnect');
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('login/index.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ]);
+
     }
+
+
+        #[Route('/logout', name: 'logout', methods: ['POST'])]
+        public function logout(): JsonResponse
+        {
+            return $this->json('user disconnect');
+        }
 }
