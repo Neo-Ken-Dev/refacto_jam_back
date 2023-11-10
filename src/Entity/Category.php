@@ -2,31 +2,48 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(normalizationContext: ['groups' => 'category:item']),
+        new GetCollection(normalizationContext: ['groups' => 'category:list'])
+    ],
+    order: ['id' => 'DESC'],
+    paginationEnabled: false,
+)]
 class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['category:list', 'category:item'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['category:list', 'category:item'])]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['category:list', 'category:item'])]
     private $description;
 
  
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['category:list', 'category:item'])]
     private $slug;
 
     #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'categories')]
+    #[Groups(['category:list', 'category:item'])]
     private $products;
 
     public function __construct()

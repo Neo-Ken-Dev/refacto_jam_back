@@ -16,7 +16,6 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(Request $request, CategoryRepository $categoryRepo, SessionInterface $session, ProductRepository $productRepository): Response
     {
-
         $filter = $request->get("filter");
         $minRange = $productRepository->findOneBy([], ['price' => 'asc'])->getPrice();
         $maxRange = $productRepository->findOneBy([], ['price' => 'desc'])->getPrice();

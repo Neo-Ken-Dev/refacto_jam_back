@@ -2,6 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,23 +13,36 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
+#[ApiResource(
+    operations: [
+        new Get(normalizationContext: ['groups' => 'order:item']),
+        new GetCollection(normalizationContext: ['groups' => 'order:list'])
+    ],
+    order: ['id' => 'DESC'],
+    paginationEnabled: false,
+    )]
 class Order
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['order:list', 'order:item'])]
     private $id;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['order:list', 'order:item'])]
     private $datetime;
 
     #[ORM\Column(type: 'float')]
+    #[Groups(['order:list', 'order:item'])]
     private $total;
 
     #[ORM\OneToMany(mappedBy: 'order_associated', targetEntity: LineOrder::class, cascade: ["persist"])]
+    #[Groups(['order:list', 'order:item'])]
     private $lineOrders;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['order:list', 'order:item'])]
     private $status;
 
     public function __construct()

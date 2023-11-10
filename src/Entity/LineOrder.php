@@ -2,29 +2,46 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\LineOrderRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LineOrderRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(normalizationContext: ['groups' => 'lineOrder:item']),
+        new GetCollection(normalizationContext: ['groups' => 'lineOrder:list'])
+    ],
+    order: ['id' => 'DESC'],
+    paginationEnabled: false,
+)]
 class LineOrder
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['lineOrder:list', 'lineOrder:item'])]
     private $id;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['lineOrder:list', 'lineOrder:item'])]
     private $quantity;
 
     #[ORM\Column(type: 'float')]
+    #[Groups(['lineOrder:list', 'lineOrder:item'])]
     private $subtotal;
 
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'lineOrders')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['lineOrder:list', 'lineOrder:item'])]
     private $order_associated;
 
     #[ORM\ManyToOne(targetEntity: Product::class)]
     #[ORM\JoinColumn(nullable: false,onDelete:"CASCADE")]
+    #[Groups(['lineOrder:list', 'lineOrder:item'])]
     private $product;
 
     public function getId(): ?int

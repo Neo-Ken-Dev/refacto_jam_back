@@ -3,28 +3,45 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(normalizationContext: ['groups' => 'product:item']),
+        new GetCollection(normalizationContext: ['groups' => 'product:list'])
+    ],
+    order: ['id' => 'DESC'],
+    paginationEnabled: false,
+    )]
 class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['product:list', 'product:item'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['product:list', 'product:item'])]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['product:list', 'product:item'])]
     private $description;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['product:list', 'product:item'])]
     private $image;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['product:list', 'product:item'])]
     private $price;
 
     private int $quantity=0;
